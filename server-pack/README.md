@@ -9,6 +9,10 @@ This folder builds a server copy that leaves those mods out.
 1. **Client-only mods.** Sodium dies in the very first second of startup, before logging exists, which is why the host showed no log at all. Behind it, Immersive Damage Indicators, Cubes Without Borders, Animated Hearts and MC2 Interactive Foliage each crash a server too. Those 5, plus about 30 other client-only mods (shaders, sounds, UI tweaks), are listed in `client-only-mods.txt`. Players keep all of them on their PCs.
 2. **Improved Mobs 1.16 vs Cataclysm.** Improved Mobs 1.16 builds a copy of every mob at startup inside a fake world that pretends to be the client. Cataclysm's bosses then touch a client-only field, and a real server doesn't have it. The server stops with "Failed to load datapacks, can't proceed with server load". So the pack now uses **Improved Mobs 1.15.2 + TenshiLib 2.2.5**, and the config carries over all the same settings. **Don't update either one** until Improved Mobs fixes this.
 
+## Prebuilt server files
+
+`FunDumCraft-server/` in the repo root is already built and tested. Zip up its contents (the 5 folders inside, not the folder itself) and upload that to the server. It's only correct for the commit it was built from. **Any time mods or configs change, rebuild it** with the command below and commit it along with your change, or the server and clients will drift apart.
+
 ## Build the server files
 
 Needs Python 3.10 or newer. From the repo root:
@@ -18,6 +22,12 @@ python server-pack/make_server_pack.py ../FunDumCraft-server --zip
 ```
 
 That writes `../FunDumCraft-server/` and `../FunDumCraft-server.zip` containing `mods`, `config`, `defaultconfigs`, `kubejs` and `datapacks`.
+
+To refresh the copy that lives in the repo, delete `FunDumCraft-server/` first, since the script won't write into a folder that already has files:
+
+```
+python server-pack/make_server_pack.py FunDumCraft-server
+```
 
 If it prints a WARNING about a jar in the list that it can't find, a client-only mod was updated and renamed. Put the new file name in `client-only-mods.txt`.
 

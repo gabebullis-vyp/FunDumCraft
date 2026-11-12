@@ -1,0 +1,230 @@
+#General settings
+#By default the difficulty caps at 250
+[general]
+	#Enables increasing the difficulty over time
+	"Enable difficulty scaling" = true
+	#Time in ticks for which the difficulty shouldn't increase at the beginning. One full minecraft day is 24000 ticks
+	# Default: 0
+	# Range: > 0
+	"Difficulty Delay" = 24000
+	#Whether mobs from spawners should be ignored
+	"Ignore Spawner" = false
+	#Handles increase in difficulty regarding current difficulty.
+	#Difficulty increase runs every 2400 ticks. One minecraft day has 24000 ticks.
+	#Format is <difficulty threshold>;<expression> with expression being the new difficulty
+	#Example ["0;difficulty + 0.01","10;difficulty + 0.1","30;difficulty + 0"]
+	#With this the difficulty will increase by 0.01 every 2400 ticks for a total of 0.1 per mc day till reaching a difficulty of 10.
+	#Afterwards it increases by 1 per mc day till it reaches 30 and then stops increasing.
+	#Negative values are also supported.
+	#Following variables are available to use in expressions:
+	#difficulty: The current difficulty in the context
+	#distance_spawn: Distance to the spawnpoint. Does not include the height
+	#distance_origin: Distance to 0,0
+	#distance_center: Distance to the center as per defined in this config
+	#Difficulty thresholds also supports a range input in form of <from>-<to>
+	#This is mostly interesting if you are using NEGATIVE values
+	#E.g. following example ["0;difficulty + 0.01","10;difficulty - 0.1"]
+	#has the problem that once reaching difficulty 10 it will decrease by 0.1 once and then increase once again as it was below 10
+	#To fix this you can instead now define something like ["0;difficulty + 0.01","10-5;difficulty - 0.1"]
+	#This allows the decrease to span from 10 to 5
+	"Difficulty Increase" = ["0.0;difficulty + 0.1", "250.0;difficulty"]
+	#Wether difficulty should only increase with at least one online player or not
+	"Ignore Players" = false
+	#If true will increase difficulty by the amount of time skipped. Else will only increase difficulty once.
+	"Consider Time Skip" = true
+	#How the difficulty at a position is calculated. Supported values are: 
+	#GLOBAL: Serverwide difficulty value
+	#PLAYERMAX: Maximum difficulty of players in a 256 radius around the position
+	#PLAYERMEAN: Average difficulty of players in a 256 radius around the position
+	#PLAYERSUM: Sum of difficulty of players in a 256 radius around the position. There is no upper limit for this so max difficulty can be higher than the limit! You crazy if you use this
+	#DISTANCE: Uses the distance to the position defined in Center Position to define the difficulty
+	#DISTANCESPAWN: Uses the distance to the world spawn to define the difficulty
+	#If the type is any of the distance types the first value in the Difficulty Increase will be the distance to whatever type is used while the second expression is the direct difficulty
+	#E.g. if using DISTANCESPAWN the first value will be the distance to world spawn
+	#Example: ["0;0","500;(distance_spawn - 500) * 0.01"]
+	#Here the difficulty between 0-500 blocks to spawn will stay at 0. From then on the difficulty increases by 1 every 100 blocks further
+	#Note: the `difficulty` variable in distance based expression is always 0!
+	#Allowed Values: GLOBAL, PLAYERMAX, PLAYERMEAN, PLAYERSUM, DISTANCE, DISTANCESPAWN
+	"Difficulty type" = "PLAYERMEAN"
+	#Position used for DISTANCE difficulty type
+	"Center Position" = "0-0"
+	#Disable/Enable friendly fire for owned pets.
+	FriendlyFire = false
+	#Blacklist for pet you should't be able to give armor to. Pets from mods, which have custom armor already should be included here (for balancing reasons).
+	"Pet Blacklist" = []
+	#Treat pet blacklist as whitelist
+	"Pet Whitelist" = false
+
+#Enable/Disable difficulty features
+[features]
+	#Any of the following 
+	#[ATTRIBUTES, ARMOR, HELDITEMS, BLOCKBREAK, USEITEM, LADDER, STEAL, GUARDIAN, FLYING, TARGETVILLAGER, NEUTRALAGGRO]
+	#added here will disable that feature completely.
+	#E.g. ["GUARDIAN"] will disable the guardian feature
+	"Feature Blacklist" = ["BLOCKBREAK", "STEAL", "NEUTRALAGGRO"]
+	#Mods can override this now with a datapack! Check for the message 'Following entity overrides are loaded' in your logs to see any overrides
+	#Entities added here will be blacklisted from that feature. Usage:
+	#<entity registry name | namespace | #tag> followed by any of:
+	#[[ALL, REVERSE, ATTRIBUTES, ARMOR, HELDITEMS, BLOCKBREAK, USEITEM, LADDER, STEAL, GUARDIAN, FLYING, TARGETVILLAGER, NEUTRALAGGRO]].
+	#Having nothing is equal to ALL. Use REVERSE to reverse all features. Some features do nothing for certain mobs!
+	#Examples (without <>):
+	#<minecraft:sheep> (equal to minecraft:sheep|ALL) excludes sheeps from all modifications
+	#<minecraft:sheep|REVERSE|ATTRIBUTES> add sheep to attributes modification only
+	#<#minecraft:raiders|ATTRIBUTES> will make all raiders be excluded from attribute modifications
+	#<minecraft:sheep|ATTRIBUTES> will make sheeps be excluded from attribute modifications
+	#<minecraft> disables everything for all vanilla entities
+	"Entity Configs" = ["minecraft:allay", "minecraft:armadillo", "minecraft:axolotl", "minecraft:bat", "minecraft:bee", "minecraft:camel", "minecraft:cat", "minecraft:chicken", "minecraft:cod", "minecraft:cow", "minecraft:dolphin", "minecraft:donkey", "minecraft:fox", "minecraft:frog", "minecraft:glow_squid", "minecraft:goat", "minecraft:horse", "minecraft:iron_golem", "minecraft:llama", "minecraft:mooshroom", "minecraft:mule", "minecraft:ocelot", "minecraft:panda", "minecraft:parrot", "minecraft:pig", "minecraft:polar_bear", "minecraft:pufferfish", "minecraft:rabbit", "minecraft:salmon", "minecraft:sheep", "minecraft:skeleton_horse", "minecraft:sniffer", "minecraft:snow_golem", "minecraft:squid", "minecraft:strider", "minecraft:tadpole", "minecraft:trader_llama", "minecraft:tropical_fish", "minecraft:turtle", "minecraft:villager", "minecraft:wandering_trader", "minecraft:wolf", "minecraft:zombie_horse", "estrogen:moth", "infernalexp:glowsilk_moth", "infernalexp:glowsquito", "infernalexp:warpbeetle", "guardribbits:guard_ribbit", "yungscavebiomes:sand_snapper", "ribbits:ribbit", "fdbosses:chesed", "fdbosses:malkuth", "fdbosses:judgement_bird", "fdbosses:netzach", "quark:crab", "quark:shiba", "quark:stoneling", "quark:toretoise", "supplementaries:red_merchant", "longwings:butterfly", "longwings:moth", "block_factorys_bosses:pile_of_bones", "holyhell:bab_one", "holyhell:bab_two", "holyhell:bab_three", "holyhell:holy_cow", "holyhell:all_seer", "the_bumblezone:variant_bee", "the_bumblezone:honey_slime", "the_bumblezone:beehemoth", "the_bumblezone:bee_queen", "mutantmonsters:creeper_minion", "mutantmonsters:mutant_snow_golem", "mutantmonsters:spider_pig", "pastel:egg_laying_wooly_pig", "pastel:lizard", "pastel:kindling", "kobolds:kobold", "occultism:foliot", "occultism:djinni", "occultism:afrit", "occultism:marid", "occultism:wondering_trader", "occultism:possessed_bee", "occultism:mercy_goat", "occultism:otherworld_bird", "occultism:greedy_familiar", "occultism:bat_familiar", "occultism:deer_familiar", "occultism:cthulhu_familiar", "occultism:devil_familiar", "occultism:dragon_familiar", "occultism:blacksmith_familiar", "occultism:guardian_familiar", "occultism:headless_familiar", "occultism:chimera_familiar", "occultism:goat_familiar", "occultism:shub_niggurath_familiar", "occultism:beholder_familiar", "occultism:fairy_familiar", "occultism:mummy_familiar", "occultism:beaver_familiar", "occultism:shub_niggurath_spawn", "occultism:iesnium_golem", "occultism:demonic_wife", "occultism:demonic_husband", "witherskeletonhorse:wither_skeleton_horse", "ad_astra:lunarian", "ad_astra:lunarian_wandering_trader", "ad_astra:glacian_ram", "unusualfishmod:duality_damselfish", "unusualfishmod:mossthorn", "unusualfishmod:ripper", "unusualfishmod:spindlefish", "unusualfishmod:rhino_tetra", "unusualfishmod:drooping_gourami", "unusualfishmod:sailor_barb", "unusualfishmod:sea_spider", "unusualfishmod:triple_twirl_pleco", "unusualfishmod:aero_mono", "unusualfishmod:clownthorn_shark", "unusualfishmod:roughback_guitarfish", "unusualfishmod:sea_pancake", "unusualfishmod:pinkfin", "unusualfishmod:brick_snail", "unusualfishmod:zebra_cornetfish", "unusualfishmod:tiger_puffer", "unusualfishmod:blackcap_snail", "unusualfishmod:sneep_snorp", "unusualfishmod:deep_crawler", "unusualfishmod:wizard_jelly", "unusualfishmod:porcupine_lobsta", "unusualfishmod:trumpet_squid", "unusualfishmod:freshwater_mantis", "unusualfishmod:bark_angelfish", "unusualfishmod:shockcat", "unusualfishmod:muddytop", "unusualfishmod:kalappa", "unusualfishmod:skipper", "unusualfishmod:stout_bichir", "unusualfishmod:beaked_herring", "unusualfishmod:picklefish", "unusualfishmod:blindsailfin", "unusualfishmod:demon_herring", "unusualfishmod:amber_goby", "unusualfishmod:hatchet_fish", "unusualfishmod:copperflame", "unusualfishmod:celestial", "unusualfishmod:gnasher", "unusualfishmod:squoddle", "unusualfishmod:sea_mosquito", "unusualfishmod:forkfish", "unusualfishmod:spoon_shark", "unusualfishmod:coral_skrimp", "unusualfishmod:circus", "unusualfishmod:blizzardfin", "unusualfishmod:frostyfin", "unusualfishmod:eyelash", "unusualfishmod:jungleshark", "unusualfishmod:crimsonshell", "unusualfishmod:volt_angler", "unusualfishmod:tribble", "signal_flares:light_stick_e", "signal_flares:pink_light_stick_e", "signal_flares:cyan_light_stick_e", "signal_flares:sticky_light_stick_e", "signal_flares:sticky_cyan_light_stick_e", "signal_flares:sticky_pink_light_stick_e", "signal_flares:echo_light_stick_e", "create_mobile_packages:robo_bee", "cataclysm:netherite_ministrosity", "cataclysm:the_baby_leviathan", "cataclysm:modern_remnant", "bosses_of_mass_destruction:lich", "bosses_of_mass_destruction:obsidilith", "bosses_of_mass_destruction:gauntlet", "bosses_of_mass_destruction:void_blossom", "enderscape:drifter", "enderscape:driftlet", "enderscape:rustle", "irons_spellbooks:wisp", "irons_spellbooks:spectral_steed", "irons_spellbooks:pyromancer", "irons_spellbooks:cryomancer", "irons_spellbooks:summoned_polar_bear", "irons_spellbooks:dead_king_corpse", "irons_spellbooks:priest", "irons_spellbooks:firefly_swarm", "irons_spellbooks:apothecarist", "irons_spellbooks:cursed_armor_stand", "irons_spellbooks:summoned_sword", "irons_spellbooks:summoned_claymore", "irons_spellbooks:summoned_rapier", "irons_spellbooks:scapegoat", "minecolonies:citizen", "minecolonies:visitor", "minecolonies:mercenary", "minecolonies:cavalry_horse", "spawn:angler_fish", "spawn:tuna", "spawn:tuna_egg", "spawn:seahorse", "spawn:snail", "spawn:hamster", "spawn:ant", "spawn:herring", "spawn:sunfish", "spawn:sea_cow", "spawn:flukeshroom", "spawn:octopus", "spawn:clam", "spawn:stickbug", "spawn:barracuda", "spawn:coastal_crab", "spawn:dodo", "spawn:iguana", "spawn:marine_iguana", "spawn:stranded", "spawn:seal", "spawn:booby", "spawn:pilot_fish", "spawn:blenny", "spawn:bluefish", "csr:clay_soldier", "csr:zombie_clay_soldier", "csr:vampire_clay_soldier", "csr:boss_clay_soldier", "csr:clay_horse", "csr:clay_pegasus", "csr:clay_wraith", "csr:vampire_bat", "guardvillagers:guard", "spelunkery:dust_bunny", "terramity:blue_fairy", "terramity:pink_fairy", "terramity:green_fairy", "terramity:spirit_bomb", "terramity:guided_energy_blast_projectile", "terramity:antimatter_bomb_entity", "terramity:crystal_heart_ring", "terramity:gaias_grace_ring", "terramity:shadowflame_ring", "terramity:holy_beam", "terramity:black_hole_bomb_entity", "terramity:macro_black_hole_bomb_entity", "terramity:unholy_beam", "terramity:sniffer_kamehameha", "terramity:galick_gun", "terramity:final_kamehameha", "goodending:firefly_swarm", "goodending:woodpecker", "goodending:deer", "goodending:hedgehog", "minecraft:happy_ghast", "minecraft:sulfur_cube", "celestisynth:rainfall_turret", "celestisynth:star_monolith", "mowziesmobs:baby_foliaath", "mowziesmobs:umvuthana_follower_player", "mowziesmobs:umvuthana_crane_player", "mowziesmobs:grottol", "mowziesmobs:lantern", "mowziesmobs:sculptor", "mowziesmobs:bluff", "naraka:naraka_pickaxe", "wither_spawn_animation:animated_altar_z", "wither_spawn_animation:animated_altar_min_z", "wither_spawn_animation:animated_altar_x", "wither_spawn_animation:animated_altar_min_x", "wither_spawn_animation:animated_altar_soil_z", "wither_spawn_animation:animated_altar_soil_min_z", "wither_spawn_animation:animated_altar_soil_x", "wither_spawn_animation:animated_altar_soil_min_x", "wither_spawn_animation:animated_altar_storm_z", "wither_spawn_animation:animated_altar_storm_min_z", "wither_spawn_animation:animated_altar_storm_x", "wither_spawn_animation:animated_altar_storm_min_x", "wither_spawn_animation:animated_altar_bygone_z", "wither_spawn_animation:animated_altar_bygone_min_z", "wither_spawn_animation:animated_altar_bygone_x", "wither_spawn_animation:animated_altar_bygone_min_x", "wither_spawn_animation:animated_altar_storm_soil_z", "wither_spawn_animation:animated_altar_storm_soil_min_z", "wither_spawn_animation:animated_altar_storm_soil_x", "wither_spawn_animation:animated_altar_storm_soil_min_x", "netherman:gilded_golem", "netherman:laser", "netherman:trader", "netherman:doctor", "netherman:blacksmith", "netherman:believer", "netherman:believer_villager", "netherman:villager_prisoner", "netherman:piglin_prisoner", "netherman:azazel_guide_book", "netherman:ghastly", "aquamirae:scuttler", "aquamirae:shellback", "aquamirae:golden_moth", "aquamirae:spinefish", "aquamirae:abyssal_scyphoid", "astralsorcery:flare", "ars_nouveau:bookwyrm", "ars_nouveau:starbuncle", "ars_nouveau:alakarkinos", "ars_nouveau:whirlisprig", "ars_nouveau:wixie", "ars_nouveau:summon_wolf", "ars_nouveau:summon_horse", "ars_nouveau:dummy", "ars_nouveau:drygmy", "ars_nouveau:familiar_starbuncle", "ars_nouveau:familiar_wixie", "ars_nouveau:familiar_bookwyrm", "ars_nouveau:familiar_drygmy", "ars_nouveau:familiar_whirlisprig", "ars_nouveau:familiar_amethyst_golem", "ars_nouveau:cascading_weald_walker", "ars_nouveau:flourishing_weald_walker", "ars_nouveau:blazing_weald_walker", "ars_nouveau:vexing_weald_walker", "ars_nouveau:amethyst_golem", "ars_nouveau:gift_starby", "ars_nouveau:animated_block", "ars_nouveau:animated_head", "ars_nouveau:lily", "ars_nouveau:nook", "aether:phyg", "aether:flying_cow", "aether:sheepuff", "aether:moa", "aether:aerbunny", "aether:aerwhale", "aether:whirlwind", "aether:evil_whirlwind", "aether:aechor_plant", "aether:cloud_minion", "deep_aether:aerglow_fish", "deep_aether:quail", "deep_aether:venomite", "deep_aether:windfly", "deep_aether:gentle_wind", "alexsmobs:grizzly_bear", "alexsmobs:roadrunner", "alexsmobs:gazelle", "alexsmobs:crocodile", "alexsmobs:fly", "alexsmobs:hummingbird", "alexsmobs:orca", "alexsmobs:sunbird", "alexsmobs:gorilla", "alexsmobs:rattlesnake", "alexsmobs:endergrade", "alexsmobs:hammerhead_shark", "alexsmobs:lobster", "alexsmobs:komodo_dragon", "alexsmobs:capuchin_monkey", "alexsmobs:centipede_body", "alexsmobs:centipede_tail", "alexsmobs:warped_toad", "alexsmobs:moose", "alexsmobs:raccoon", "alexsmobs:blobfish", "alexsmobs:seal", "alexsmobs:cockroach", "alexsmobs:shoebill", "alexsmobs:elephant", "alexsmobs:snow_leopard", "alexsmobs:spectre", "alexsmobs:crow", "alexsmobs:alligator_snapping_turtle", "alexsmobs:mungus", "alexsmobs:mantis_shrimp", "alexsmobs:stradpole", "alexsmobs:emu", "alexsmobs:platypus", "alexsmobs:tasmanian_devil", "alexsmobs:kangaroo", "alexsmobs:cachalot_whale", "alexsmobs:leafcutter_ant", "alexsmobs:bald_eagle", "alexsmobs:tiger", "alexsmobs:tarantula_hawk", "alexsmobs:frilled_shark", "alexsmobs:mimic_octopus", "alexsmobs:seagull", "alexsmobs:froststalker", "alexsmobs:tusklin", "alexsmobs:laviathan", "alexsmobs:cosmaw", "alexsmobs:toucan", "alexsmobs:maned_wolf", "alexsmobs:anaconda", "alexsmobs:anteater", "alexsmobs:flutter", "alexsmobs:gelada_monkey", "alexsmobs:jerboa", "alexsmobs:terrapin", "alexsmobs:comb_jelly", "alexsmobs:cosmic_cod", "alexsmobs:bunfungus", "alexsmobs:bison", "alexsmobs:giant_squid", "alexsmobs:sea_bear", "alexsmobs:devils_hole_pupfish", "alexsmobs:catfish", "alexsmobs:flying_fish", "alexsmobs:rain_frog", "alexsmobs:potoo", "alexsmobs:mudskipper", "alexsmobs:rhinoceros", "alexsmobs:sugar_glider", "alexsmobs:underminer", "alexsmobs:skunk", "alexsmobs:banana_slug", "alexsmobs:blue_jay", "alexsmobs:caiman", "alexsmobs:triops", "bookofdragons:nightfury", "bookofdragons:deadlynadder", "bookofdragons:skrill", "bookofdragons:monstrousnightmare", "bookofdragons:gronckle", "bookofdragons:hideous_zippleback", "bookofdragons:whispering_death", "bookofdragons:terrible_terror", "bookofdragons:hobgobbler", "bookofdragons:speed_stinger", "bookofdragons:hooligan_drifter", "dummmmmmy:target_dummy", "twilightforest:bighorn_sheep", "twilightforest:boar", "twilightforest:deer", "twilightforest:dwarf_rabbit", "twilightforest:loyal_zombie", "twilightforest:penguin", "twilightforest:quest_ram", "twilightforest:raven", "twilightforest:squirrel", "twilightforest:tiny_bird", "abyssal_decor:light_cone", "scguns:supply_scamp", "scguns:the_merchant", "scguns:viventrum", "scguns:signal_beacon", "aeronauticsdiscovery:soaring_trader", "nomansland:living_pot", "nomansland:billhook_bass", "nomansland:deer", "nomansland:goose", "nomansland:tortoise", "nomansland:buddy", "nomansland:dreaming_player", "hostile_skies:helm_chains", "cr_aero_structures:villager_create_engineer", "windswept:frostbiter", "unusual_furniture:sit", "unusual_furniture:sit_stools", "alexscaves:notor", "alexscaves:subterranodon", "alexscaves:vallumraptor", "alexscaves:grottoceratops", "alexscaves:trilocaris", "alexscaves:tremorsaurus", "alexscaves:relicheirus", "alexscaves:atlatitan", "alexscaves:radgill", "alexscaves:gammaroach", "alexscaves:raycat", "alexscaves:tremorzilla", "alexscaves:lanternfish", "alexscaves:sea_pig", "alexscaves:hullbreaker", "alexscaves:gossamer_worm", "alexscaves:tripodfish", "alexscaves:deep_one", "alexscaves:deep_one_knight", "alexscaves:deep_one_mage", "alexscaves:gloomoth", "alexscaves:sweetish_fish", "alexscaves:candicorn", "alexscaves:gummy_bear", "thaumaturge:taint_cow", "thaumaturge:taint_pig", "thaumaturge:taint_chicken", "thaumaturge:taint_sheep", "thaumaturge:taint_villager", "thaumaturge:golem", "thaumaturge:turret_crossbow", "thaumaturge:turret_crossbow_advanced", "thaumaturge:arcane_bore", "snowyspirit:gingerbread_golem", "snowyspirit:gingerbread_giant", "rottencreatures:hunter_wolf", "legendary_monsters:knights_armor", "legendary_monsters:guard", "legendary_monsters:mossy_golem", "legendary_monsters:skeloraptor", "antarchy:red_ant", "antarchy:brown_ant", "antarchy:rainbow_ant", "antarchy:termite", "antarchy:rolly_polly", "antarchy:hoverboard", "antarchy:bed_bug", "antarchy:stink_bug", "antarchy:easter_bunny", "antarchy:flying_squirrel", "antarchy:caterpillar", "antarchy:butterfly", "antarchy:reverie", "antarchy:apple_cow", "antarchy:golden_apple_cow", "antarchy:enchanted_golden_apple_cow", "antarchy:dr_trayaurus", "antarchy:tentacle", "antarchy:cheep", "antarchy:dorrie", "antarchy:hercules_beetle", "antarchy:prince", "antarchy:princess", "antarchy:ouranwood_deer", "antarchy:glimmer", "antarchy:elka"]
+	#Any of the following 
+	#[ATTRIBUTES, ARMOR, HELDITEMS, BLOCKBREAK, USEITEM, LADDER, STEAL, GUARDIAN, FLYING, TARGETVILLAGER, NEUTRALAGGRO]
+	#added here will turn that feature into a whitelist in regards to Entity Configs.
+	"Feature Whitelist" = []
+
+#Settings for mod integration
+[integration]
+	#Whether vanillas clamped regional difficulty should be used. 
+	#See https://minecraft.wiki/w/Difficulty#Clamped_regional_difficulty
+	#Allowed Values: OFF, ON, ADD
+	"Use Vanilla Difficulty" = "OFF"
+	#The max value for vanilla difficulty scaling. As clamped regional difficulty returns a value between 0 and 1
+	#Thus difficulty will be regional difficulty * max
+	# Default: 250.0
+	# Range: 0.0 ~ 1.7976931348623157E308
+	"Vanilla Max" = 250.0
+	#Should the power scale mods difficulty system be used instead of this ones. (Requires power scale mod)
+	#Allowed Values: OFF, ON, ADD
+	"Use Power Scale Mod" = "ON"
+	#If true and playerEx is installed will use the level from playerEx as difficulty
+	#Allowed Values: OFF, ON, ADD
+	"Use Player EX Mod" = "ON"
+	#Scaling for playerEX integration
+	# Default: 1.0
+	# Range: 0.0 ~ 1.7976931348623157E308
+	"PlayerEX Scaling" = 1.0
+	#If true and LevelZ is installed will use the the total skill level from LevelZ as difficulty
+	#Allowed Values: OFF, ON, ADD
+	"Use LevelZ Mod" = "ON"
+	#Scaling for LevelZ integration
+	# Default: 1.0
+	# Range: 0.0 ~ 1.7976931348623157E308
+	"LevelZ Scaling" = 1.0
+	#If true and RuneCraftory is installed will use the level from RuneCraftory as difficulty
+	#Allowed Values: OFF, ON, ADD
+	"Use RuneCraftory Mod" = "ON"
+	#Scaling for RuneCraftory integration
+	# Default: 1.0
+	# Range: 0.0 ~ 1.7976931348623157E308
+	"RuneCraftory Scaling" = 1.0
+
+#Settings regarding custom ai for mobs
+[ai]
+	#Whitelist for blocks, which can be actively broken.
+	#Usage: id|namespace|#tag. Put "!" infront to exclude blocks. E.g. "minecraft", "minecraft:dirt" or "#minecraft:planks"
+	"Block Break Whitelist" = ["#c:glass_blocks", "#c:glass_panes", "#minecraft:fence_gates", "#c:fence_gates", "#minecraft:wooden_doors"]
+	#Treat Block Whitelist as Blacklist
+	"Breaklist as Blacklist" = false
+	#Use the block breaking sound instead of a knocking sound
+	Sound = true
+	#(Expression): Chance for a mob to be able to break blocks
+	"Breaker Chance" = "0.0"
+	#Difficulty at which mobs are able to break blocks
+	# Default: 0.0
+	# Range: 0.0 ~ 1.7976931348623157E308
+	"Difficulty Break AI" = 0.0
+	#Initial cooldown for block breaking mobs
+	# Default: 120
+	# Range: > 0
+	"Breaker Initial Cooldown" = 120
+	#Cooldown for breaking blocks
+	# Default: 20
+	# Range: > 0
+	"Breaker Cooldown" = 20
+	#By default mobs can only break the block they can harvest with the current tool they holding. Set this to true to disable that check (The block will not drop if they cant harvest it though!).
+	"Ignore Harvest Check" = false
+	#Blocks will be restored after x ticks being broken. If set to 0 will never restore
+	#This will not restore block entity data!
+	# Default: 0
+	# Range: > 0
+	"Restore delay" = 0
+	#If mobs should break blocks when not chasing a target
+	"Idle Break" = false
+	#Chance a breaker mob to ignore line of sight
+	# Default: 1.0
+	# Range: 0.0 ~ 1.0
+	"Breaker Sight Ignore" = 1.0
+	#(Expression): The speed modifier for breaking blocks
+	"Breaking Speed Modifier" = "1"
+	#(Expression): Chance for a mob to be able to steal items from inventory blocks
+	"Stealer Chance" = "0"
+	#Difficulty at which mobs are able to steal items
+	# Default: 0.0
+	# Range: 0.0 ~ 1.7976931348623157E308
+	"Difficulty Steal AI" = 0.0
+	#List of blocks mobs shouldn't steal from. You can also add a modid to blacklist whole mods
+	"Steal Block Blacklist" = []
+	#Items which will be given to mobs who can break blocks. Empty list = no items. Syntax: id;weight
+	#Note: Mobs can only break blocks if the tool they are holding can break the blocks
+	"Breaking items" = ["minecraft:diamond_pickaxe;1", "minecraft:iron_axe;2"]
+	#Should mobs be able to break block entities? Evaluated before the break list
+	"Break BlockEntities" = true
+	#(Expression): Chance for neutral mobs to be aggressive
+	"Neutral Aggressive Chance" = "0.0"
+	#(Expression): Chance for mobs to be able to summon an aquatic mount
+	"Guardian Chance" = "0.5"
+	#(Expression): Chance for mobs to be able to summon a flying mount
+	"Flying Chance" = "0.5"
+	#Set this to true to allow tnt thrown by mobs to destroy blocks
+	"TNT Block Destruction" = false
+	#(Expression): Chance for a mob to ignore line of sight
+	#This config ONLY affects villager target, neutral aggressive and auto targeting feature
+	"Ignore Sight" = "0.5"
+	#List for of pairs containing which mobs auto target others.
+	#Syntax is <source-target> where
+	#  source: is the mob that should target something. This can be either an entity or a tag
+	#  target: the mob source should target. This can be either an entity or a tag
+	#Examples: 
+	#minecraft:zombie-minecraft:skeleton makes all zombies target skeletons
+	#minecraft:zombie-#minecraft:raiders makes all zombies target raid entities
+	"Auto Target List" = []
+
+#Configs regarding mobs spawning with equipment
+[equipment]
+	#Blacklist items from whole mods. Add modid to prevent items from that mod being equipped.
+	#For individual items use the equipment.json!
+	#e.g. minecraft will disable all vanilla items to be given to mobs
+	"Item Blacklist" = []
+	#Use blacklist as whitelist
+	"Item Whitelist" = false
+	#Blacklist for items mobs should never be able to use.
+	#Use as in using the item similar to players (e.g. shooting bows)
+	"Item Use Blacklist" = ["bigbrain:buckler"]
+	#Turn the use blacklist into a whitelist
+	"Item Use Whitelist" = false
+	#This mod adds a custom AI to mobs so they can use items.
+	#Some mobs are able to use some items by default.
+	#This defines a mapping to prevent those mobs using the added AI
+	#For example Skeletons already use bows and if not blacklisted will make super fast shooting skeletons
+	#<entity registry name;item>
+	#For different items but same entity use multiple lines
+	#Some special names are BOW, TRIDEN, CROSSBOW refering to every bow/trident/crossbow item (So you dont need to type e.g. every bow item)
+	"Entity Item Use Blacklist" = ["minecraft:skeleton;BOW", "minecraft:wither_skeleton;BOW", "minecraft:stray;BOW", "minecraft:illusioner;BOW", "minecraft:drowned;TRIDENT", "minecraft:piglin;CROSSBOW", "minecraft:pillager;CROSSBOW", "minecraft:snow_golem;minecraft:snowball"]
+	#(Expression): Chance for a mob to have a piece of armor
+	"Equipment Chance" = "0.1 + min(difficulty * 0.8 / 250, 0.8)"
+	#(Expression): Chance for a mob to have additional pieces of armor
+	"Additional Equipment Chance" = "0.3 + min(difficulty * 0.6 / 250, 0.6)"
+	#(Expression): Chance for an equipment to have a random armor trim
+	"Armor Trim Chance" = "0.05 + min(difficulty * 0.2 / 250, 0.2)"
+	#(Expression): Chance for a mob to have an item in its main hand
+	"Main Hand Item Chance" = "0.1 + min(difficulty * 0.3 / 250, 0.3)"
+	#(Expression): Chance for a mob to have an item in its offhand
+	"Offhand Item Chance" = "0.1 + min(difficulty * 0.3 / 250, 0.3)"
+	#(Expression): Chance for a mob to drop its items
+	#This ONLY applies to equipment added through this mod!
+	"Drop Chance" = "0"
+	#(Expression): Chance for an equipment piece to be enchanted
+	"Enchanting Chance" = "0.2 + min(difficulty * 0.6 / 250, 0.6)"
+	#Specify enchanting levels according to difficulty. <difficulty;expression>
+	"Enchanting Calc" = ["0.0;random_integer(1, 10)", "25.0;random_integer(5, 15)", "50.0;random_integer(10, 17)", "100.0;random_integer(15, 25)", "200.0;random_integer(20, 30)", "250.0;random_integer(30, 35)"]
+	#Blacklist enchantments from being applied to equipments
+	"Enchanting Blacklist" = []
+	#Turn the enchant blacklist to a whitelist
+	"Enchanting Whitelist" = false
