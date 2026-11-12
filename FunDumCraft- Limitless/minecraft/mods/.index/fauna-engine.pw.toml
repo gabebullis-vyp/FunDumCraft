@@ -1,0 +1,18 @@
+filename = 'faunaengine-1.2+1.21.1-neoforge.jar'
+name = 'FAUNA Engine'
+side = 'both'
+x-prismlauncher-dependencies = []
+x-prismlauncher-loaders = [ 'neoforge' ]
+x-prismlauncher-mc-versions = [ '1.21.1' ]
+x-prismlauncher-release-type = 'release'
+x-prismlauncher-version-number = '1.2'
+
+[download]
+hash = 'e2e12ee9e8322a07f3e5b0859a0a16094c2046c0b7935d51199bd1980d953f2b70aafec0489285e7475d3a488e5181650a7679b695e0a1852b8a82c4cc448f43'
+hash-format = 'sha512'
+mode = 'url'
+url = 'https://cdn.modrinth.com/data/94WRYNtT/versions/nJoo5qQS/faunaengine-1.2%2B1.21.1-neoforge.jar'
+
+[update.modrinth]
+mod-id = '94WRYNtT'
+version = 'nJoo5qQS'

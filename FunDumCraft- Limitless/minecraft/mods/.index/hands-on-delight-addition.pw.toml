@@ -1,0 +1,18 @@
+filename = 'HandsOnDelight-Additions-1.0.0.jar'
+name = 'Hands-On Delight Addition'
+side = 'server'
+x-prismlauncher-dependencies = []
+x-prismlauncher-loaders = [ 'neoforge' ]
+x-prismlauncher-mc-versions = [ '1.21.1' ]
+x-prismlauncher-release-type = 'release'
+x-prismlauncher-version-number = 'V1.0.0'
+
+[download]
+hash = 'a8c2cbf086bf2fec9cecec8503038e12402554d9'
+hash-format = 'sha1'
+mode = 'metadata:curseforge'
+url = ''
+
+[update.curseforge]
+file-id = 9566731
+project-id = 1799430
