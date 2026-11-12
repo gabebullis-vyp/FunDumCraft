@@ -9,6 +9,19 @@ This folder builds a server copy that leaves those mods out.
 1. **Client-only mods.** Sodium dies in the very first second of startup, before logging exists, which is why the host showed no log at all. Behind it, Immersive Damage Indicators, Cubes Without Borders, Animated Hearts and MC2 Interactive Foliage each crash a server too. Those 5, plus about 30 other client-only mods (shaders, sounds, UI tweaks), are listed in `client-only-mods.txt`. Players keep all of them on their PCs.
 2. **Improved Mobs 1.16 vs Cataclysm.** Improved Mobs 1.16 builds a copy of every mob at startup inside a fake world that pretends to be the client. Cataclysm's bosses then touch a client-only field, and a real server doesn't have it. The server stops with "Failed to load datapacks, can't proceed with server load". So the pack now uses **Improved Mobs 1.15.2 + TenshiLib 2.2.5**, and the config carries over all the same settings. **Don't update either one** until Improved Mobs fixes this.
 
+## Why players got kicked when joining
+
+Players got "Connection Lost, Internal Exception: io.netty.handler.codec.EncoderException: Failed to encode packet 'clientbound/minecraft:custom_payload'" the moment they joined. The server log showed `Failed encoding custom payload fabric:accepted_attachments_v1` with an `UnsupportedOperationException` from `NeoNetworkRegistrar`.
+
+txnilib (needed by Immersive Messages and Redirected) bundles its own copy of Forgified Fabric API, version 0.115.6. That version hooks a NeoForge method by counting its return statements. NeoForge 21.1.261 added one more return to that method, so on 21.1.261 and newer the hook lands on the wrong line, and Fabric API's join packet goes out with a placeholder encoder that always throws. Single player never encodes packets, so it only shows up on a real server. Apex installs NeoForge 21.1.265, which is why it broke there.
+
+The fix has two parts, and both are already in the pack:
+
+* **forgified-fabric-api-0.116.15+2.3.6+1.21.1.jar** in the mods folder. It's newer than the copy inside txnilib, so NeoForge loads it instead. It doesn't count return statements anymore, and it doesn't even send that packet now. **Don't delete it or swap it for anything older than 2.3.6.**
+* **NeoForge 21.1.265** for the client in `mmc-pack.json` (it used to be 21.1.259). Fabric API 2.3.6 needs NeoForge 21.1.262 or newer and crashes on startup with anything older. Prism downloads the new NeoForge by itself the next time the instance launches.
+
+Every player has to update their copy of the pack, or they'll still have the old NeoForge and won't have the new jar.
+
 ## Prebuilt server files
 
 `FunDumCraft-server/` in the repo root is already built and tested. Zip up its contents (the 5 folders inside, not the folder itself) and upload that to the server. It's only correct for the commit it was built from. **Any time mods or configs change, rebuild it** with the command below and commit it along with your change, or the server and clients will drift apart.
@@ -33,15 +46,17 @@ If it prints a WARNING about a jar in the list that it can't find, a client-only
 
 ## Set up the server (Apex Hosting)
 
-1. **Loader:** NeoForge for Minecraft 1.21.1. Match the client's NeoForge build, which is **21.1.259** (see `mmc-pack.json`).
+1. **Loader:** NeoForge for Minecraft 1.21.1, build **21.1.265** to match the clients (see `mmc-pack.json`). It has to be 21.1.262 or newer or the server won't start. Apex's default 21.1.265 is right.
 2. **Java:** set Java 21 in the Customizations tab. NeoForge 1.21.1 won't start on 17.
 3. **RAM:** at least 12 GB. Tested idle with nobody online, it sits around 6 GB. Go 14 to 16 GB if 5+ people play or you build big Create machines.
 4. Stop the server. Delete the old `mods`, `config`, `defaultconfigs`, `kubejs` and `datapacks` folders on it.
 5. Upload `FunDumCraft-server.zip` over FTP, then use Extract Here in the file manager.
 6. Start it. The first boot builds a new world and takes a few minutes. Look for `Done (` in the console.
 
-If Apex's NeoForge dropdown doesn't list 21.1.259, Apex supports uploading a custom server jar. NeoForge's official ServerStarterJar (github.com/neoforged/ServerStarterJar) can be used as that jar to install an exact build. We haven't tested that route yet.
+Tested on a clean Linux server with NeoForge 21.1.265.
 
 ## When you add or update mods
 
 If a new mod is purely visual (shaders, HUD, sounds, menus, animations), add its jar name to `client-only-mods.txt`. If the server crashes after an update, check `crash-reports/` first, then `logs/latest.log`. A line saying `invalid dist DEDICATED_SERVER` names the client-only mod to add to the list.
+
+If the server boots but kicks players as they join with an `EncoderException`, search the server's `logs/latest.log` for `Failed encoding custom payload`. The name after it is the network channel that broke, and the mod that owns it is usually out of date for the server's NeoForge build.
